@@ -130,7 +130,7 @@ module Fiveruns
       end
       
       def to_json
-        {:children => children_with_disparity, :time => time}.to_json
+        {:children => children_with_disparity, :time => time, :extras => extras}.to_json
       end
       
       private
@@ -187,6 +187,10 @@ module Fiveruns
           @name = name
           @content = content
           @extended = extended
+        end
+        
+        def to_json
+          {:name => name, :content => content, :extended => extended}.to_json
         end
         
         private
