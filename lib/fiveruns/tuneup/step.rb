@@ -1,3 +1,5 @@
+require 'json'
+
 module Fiveruns
   module Tuneup
     
@@ -16,6 +18,7 @@ module Fiveruns
     end
     
     class RootStep
+      
       include Templating
       attr_reader :children, :bar
       attr_accessor :time, :parent
@@ -72,6 +75,22 @@ module Fiveruns
     end
 
     class Step < RootStep
+      
+      def self.load(source, depth = 0)
+        hash = source.is_a?(Hash) ? source : JSON.load(source)
+        step = if hash['layer']
+          Step.new(hash['name'], hash['layer'], hash['extras'], hash['time'])
+        elsif depth == 0
+          RootStep.new(hash['time'])
+        else
+          raise ArgumentError, "Could not find data for step in #{hash.inspect}"
+        end
+        hash['children'].each do |child_hash|
+          child = load(child_hash)
+          step.add_child(child)
+        end
+        step
+      end
 
       def self.stack
         @stack ||= []
@@ -130,7 +149,7 @@ module Fiveruns
       end
       
       def to_json
-        {:children => children_with_disparity, :time => time, :extras => extras}.to_json
+        {:children => children, :time => time, :extras => extras}.to_json
       end
       
       private
