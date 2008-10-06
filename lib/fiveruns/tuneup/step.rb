@@ -62,6 +62,10 @@ module Fiveruns
       def proportion
         time / root.time
       end
+      
+      def to_html_with_children
+        to_html << children.map { |c| c.to_html }.join
+      end
 
       def template
         %(
