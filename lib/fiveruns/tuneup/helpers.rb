@@ -8,14 +8,15 @@ module Fiveruns
     end
     
     def self.strip_root(text)
-      pattern = /^#{Regexp.quote Merb.root}\/?/o
-      if text =~ pattern
-        result = text.sub(pattern, '')
-        in_app = result !~ /^gems\//
-        [in_app, result]
-      else
-        [false, text]
+      if defined?(::Fiveruns::Tuneup::STRIP_ROOT)
+        pattern = /^#{Regexp.quote ::Fiveruns::Tuneup::STRIP_ROOT}\/?/o
+        if text =~ pattern
+          result = text.sub(pattern, '')
+          in_app = result !~ /^gems\//
+          return [in_app, result]
+        end
       end
+      [false, text]
     end
     
     # TODO: Refactor
