@@ -23,6 +23,7 @@ module Fiveruns
       
       def component(layer)
         width = width_of(layer)
+        return '' unless width > 0
         %(
           <li title="#{layer.to_s.capitalize}" style="width: #{width}px;" class="tuneup-layer-#{layer}">#{layer.to_s[0,1].capitalize if width >= 12}</li>
         )
