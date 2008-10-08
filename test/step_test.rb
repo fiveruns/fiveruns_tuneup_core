@@ -19,6 +19,7 @@ class StepTest < Test::Unit::TestCase
     should "have normal children" do
       @root.children.each do |child|
         assert_normal_node(child)
+        assert_valid_extras(child)
       end
     end
   end
@@ -27,6 +28,13 @@ class StepTest < Test::Unit::TestCase
     assert node.is_a?(Fiveruns::Tuneup::Step)
     node.children.each do |child|
       assert_normal_node(child)
+    end
+  end
+  
+  def assert_valid_extras(node)
+    node.extras.each do |key, extra|
+      assert_kind_of String, key
+      assert_kind_of Fiveruns::Tuneup::Step::Extra, extra
     end
   end
   

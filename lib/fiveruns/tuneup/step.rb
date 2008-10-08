@@ -160,7 +160,14 @@ module Fiveruns
       
       def build_extras(raw_extras)
         raw_extras.sort_by { |k, v| k.to_s }.map do |name, data|
-          data = data.is_a?(Array) ? data : [data]
+          data = case data
+          when Array
+            data
+          when Hash
+            [data['content'], data['extended']]
+          else
+            [data]
+          end
           Extra.new(name, *data )
         end
       end
