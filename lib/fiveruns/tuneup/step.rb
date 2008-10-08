@@ -172,20 +172,24 @@ module Fiveruns
               <li class="tuneup-title">
                 <span class="time"><%= '%.1f' % (time * 1000) %> ms</span>
                 <a class='tuneup-step-name' title="<%=h name %>"><%=h name %></a>
-                <a class='tuneup-step-extras-link'>(?)</a>
+                <% if !extras.empty? %>
+                  <a class='tuneup-step-extras-link'>(?)</a>
+                <% end %>
               </li>
               <li class="tuneup-detail-bar"><%= bar.to_html %></li>
               <li style="clear: both;"/>
            </ul>
-           <div class='tuneup-step-extras'>
-             <div>
-               <dl>
-                 <% extras.each do |extra| %>
-                   <%= extra.to_html %>
-                 <% end %>
-               </dl>
+           <% if !extras.empty? %>
+             <div class='tuneup-step-extras'>
+               <div>
+                 <dl>
+                   <% extras.each do |extra| %>
+                     <%= extra.to_html %>
+                   <% end %>
+                 </dl>
+               </div>
              </div>
-           </div>
+           <% end %>
            <%= html_children %>
           </li>
         )
