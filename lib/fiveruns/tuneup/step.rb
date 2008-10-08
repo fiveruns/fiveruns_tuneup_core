@@ -118,7 +118,7 @@ module Fiveruns
       def initialize(name, layer, raw_extras = {}, time = nil)
         super(time)
         @name = name
-        @layer = layer
+        @layer = layer.to_sym
         @extras = build_extras(raw_extras)
       end
 
