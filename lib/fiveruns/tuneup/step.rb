@@ -41,7 +41,9 @@ module Fiveruns
       def disparity
         result = time - children.inject(0) { |sum, child| sum + child.time }
         if result < 0
-          raise CalculationError, "Child steps exceed parent step size"
+          #TODO resolve instances where sum of child times exceed parent time
+          #raise CalculationError, "Child steps exceed parent step size"
+          result = 0
         end
         result
       end
@@ -130,7 +132,7 @@ module Fiveruns
         children + [extra_step]
       end
 
-      def layer_portions
+      def layer_portions  
         @layer_portions ||= begin
           result = {:model => 0, :view => 0, :controller => 0}
           if children.empty?
@@ -141,6 +143,7 @@ module Fiveruns
               totals[child.layer] += child.time
               totals
             end
+            
             times[layer] ||= 0
             times[layer] += disparity
             times.inject(result) do |all, (l, t)|
