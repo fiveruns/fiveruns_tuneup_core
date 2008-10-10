@@ -50,7 +50,7 @@ module Fiveruns
         children << child
       end
       def format_time(time)
-        '%.1fms' % (time * 1000)
+        '%.2fms' % (time * 1000)
       end
       def layer_portions
         children.first.layer_portions
@@ -177,7 +177,7 @@ module Fiveruns
           <li class="<%= html_class %>">
             <ul class="tuneup-step-info">
               <li class="tuneup-title">
-                <span class="time"><%= '%.1f' % (time * 1000) %> ms</span>
+                <span class="time"><%= '%.2f' % (time * 1000) %> ms</span>
                 <a class='tuneup-step-name' title="<%=h name %>"><%=h name %></a>
                 <% if !extras.empty? %>
                   <a class='tuneup-step-extras-link'>(?)</a>
