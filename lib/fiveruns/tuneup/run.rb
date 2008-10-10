@@ -1,14 +1,19 @@
 require 'zlib'
 require 'digest/sha1'
 require 'fileutils'
+require 'httparty'
 
 module Fiveruns
   module Tuneup
     
     class Run
+      include HTTParty
+      base_uri ENV['TUNEUP_COLLECTOR'] || 'https://tuneup-collector.fiveruns.com'
+      format :json
       
       class << self
         attr_accessor :directory
+        attr_accessor :api_key
       end
       
       def self.environment
@@ -23,6 +28,25 @@ module Fiveruns
       def self.files_for(url)
         run_directory = Digest::SHA1.hexdigest(url.to_s)
         Dir[File.join(directory, run_directory, '*.json.gz')]
+      end
+      
+      def self.share(slug)
+        if api_key?
+          file = Dir[File.join(directory, "%s.json.gz" % slug)].first
+          if file
+            run = load(File.open(file, 'rb') { |f| f.read })
+            result = post '/runs.json', :body => {:api_key => api_key, :run => run.to_json}
+            result['run_id']
+          else
+            raise ArgumentError, "Invalid run: #{slug}"
+          end
+        else
+          raise ArgumentError, "No API Key set"
+        end
+      end
+      
+      def api_key?
+        @api_key
       end
       
       def self.load(compressed)

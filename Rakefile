@@ -9,7 +9,7 @@ Echoe.new 'fiveruns_tuneup_core' do |p|
   p.summary = "Common objects for the FiveRuns TuneUp service"
   p.url = "http://tuneup.fiveruns.com"
   p.include_rakefile = true
-  p.runtime_dependencies = %w(json)
+  p.runtime_dependencies = %w(json httparty)
   p.development_dependencies = %w(FakeWeb Shoulda)
   p.rcov_options = '--exclude gems --exclude version.rb --sort coverage --text-summary --html -o coverage'
 end
