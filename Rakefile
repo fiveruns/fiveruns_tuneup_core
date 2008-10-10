@@ -6,7 +6,7 @@ Echoe.new 'fiveruns_tuneup_core' do |p|
   p.author = "FiveRuns Development Team"
   p.email  = 'dev@fiveruns.com'
   p.project = 'fiveruns'
-  p.summary = "Common objects for the FiveRuns TuneUp service"
+  p.summary = "Core utilities for FiveRuns TuneUp panels"
   p.url = "http://tuneup.fiveruns.com"
   p.include_rakefile = true
   p.runtime_dependencies = %w(json)
