@@ -34,8 +34,8 @@ class RunTest < Test::Unit::TestCase
         setup_run.save        
       end
       should "create Run instances" do
-        assert_equal 1, Fiveruns::Tuneup::Run.files_for(@run.url).size
-        Fiveruns::Tuneup::Run.files_for(@run.url).each do |file|
+        assert_equal 1, Fiveruns::Tuneup::Run.all_for(@run.url).size
+        Fiveruns::Tuneup::Run.all_for(@run.url, :filename).each do |file|
           data = File.open(file, 'rb') { |f| f.read }
           assert_kind_of Fiveruns::Tuneup::Run, Fiveruns::Tuneup::Run.load(data)
         end

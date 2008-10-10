@@ -1,3 +1,8 @@
+require 'zlib'
+require 'digest/sha1'
+require 'fileutils'
+require 'net/https'
+
 $:.unshift(File.dirname(__FILE__))
 
 require 'fiveruns/tuneup/templating'

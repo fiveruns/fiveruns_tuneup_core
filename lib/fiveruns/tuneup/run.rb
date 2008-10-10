@@ -1,16 +1,8 @@
-require 'zlib'
-require 'digest/sha1'
-require 'fileutils'
-require 'httparty'
-
 module Fiveruns
   module Tuneup
     
     class Run
-      include HTTParty
-      base_uri ENV['TUNEUP_COLLECTOR'] || 'https://tuneup-collector.fiveruns.com'
-      format :json
-      
+
       class << self
         attr_accessor :directory
         attr_accessor :api_key
@@ -25,18 +17,51 @@ module Fiveruns
         }
       end
       
-      def self.files_for(url)
-        run_directory = Digest::SHA1.hexdigest(url.to_s)
-        Dir[File.join(directory, run_directory, '*.json.gz')]
+      def self.slug_of(filename)
+        url_directory, file = filename.split(File::SEPARATOR)[-2, 2]
+        File.join(url_directory, File.basename(file, '.json.gz'))
       end
       
+      def self.all(format = :slug)
+        files = Dir[File.join(directory, '*', '*.json.gz')]
+        format == :slug ? files.map { |file| slug_of(file) } : files
+      end
+      
+      def self.all_for(url, format = :slug)
+        run_directory = Digest::SHA1.hexdigest(url.to_s)
+        files = Dir[File.join(directory, run_directory, '*.json.gz')]
+        format == :slug ? files.map { |file| slug_of(file) } : files
+      end
+      
+      def self.last(format = :slug)
+        all(format).sort_by { |f| File.basename(f) }.last
+      end
+      
+      def self.service_uri
+        @service_uri = URI.parse(ENV['TUNEUP_COLLECTOR'] || 'https://tuneup-collector.fiveruns.com')
+      end
+            
       def self.share(slug)
         if api_key?
           file = Dir[File.join(directory, "%s.json.gz" % slug)].first
           if file
             run = load(File.open(file, 'rb') { |f| f.read })
-            result = post '/runs.json', :body => {:api_key => api_key, :run => run.to_json}
-            result['run_id']
+            http = Net::HTTP.new(service_uri.host, service_uri.port)
+            http.use_ssl = true if service_uri.scheme == 'https'
+            body = "api_key=#{api_key}&run=#{CGI.escape(run.to_json)}"
+            begin
+              resp = http.post('/runs.json', body, "Content-Type" => 'application/x-www-form-urlencoded')
+              case resp.code.to_i
+              when 201
+                return JSON.load(resp.body)['run_id']
+              else
+                # TODO: return error info
+                return false
+              end
+            rescue Exception => e
+              # TODO: return error info
+              return false
+            end
           else
             raise ArgumentError, "Invalid run: #{slug}"
           end
@@ -45,13 +70,14 @@ module Fiveruns
         end
       end
       
-      def api_key?
+      def self.api_key?
         @api_key
       end
       
       def self.load(compressed)
         file = JSON.load(Zlib::Inflate.inflate(compressed))
-        new(file['url'], file['data'], file['environment'], Time.at(file['collected_at']))
+        step = Fiveruns::Tuneup::Step.load(file['data'])
+        new(file['url'], step, file['environment'], Time.at(file['collected_at']))
       end
       
       attr_reader :url, :data, :environment, :collected_at
@@ -87,6 +113,7 @@ module Fiveruns
       def to_json
         {
           :id => slug,
+          :url => url,
           :environment => environment,
           :collected_at => collected_at.to_f,
           :data => data
