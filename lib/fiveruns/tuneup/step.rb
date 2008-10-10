@@ -138,14 +138,9 @@ module Fiveruns
           if children.empty?
             result[layer] = 1
           else
-            times = children.inject({}) do |totals, child|
-              totals[child.layer] ||= 0
-              totals[child.layer] += child.time
-              totals
-            end
+            times = layer_times
             
             times[layer] ||= 0
-            times[layer] += disparity
             times.inject(result) do |all, (l, t)|
               result[l] = t / time
               result            
@@ -153,6 +148,20 @@ module Fiveruns
           end
           result
         end
+      end
+      
+      def layer_times
+        if children.empty?
+          return {layer => time}
+        end
+        
+        totals = {:model => 0, :view => 0, :controller => 0}
+        children_with_disparity.inject(totals) do |all, child|
+          breakdown = child.layer_times
+          breakdown.each { |l,t| all[l] += t }
+          all
+        end
+        totals
       end
       
       def to_json
