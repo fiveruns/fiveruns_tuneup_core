@@ -156,7 +156,8 @@ module Fiveruns
       end
       
       def to_json
-        {:children => children, :time => time, :extras => extras}.to_json
+        extras_hash = extras.inject({}) { |all, extra| all[extra.name] = extra; all }
+        {:name => name, :children => children, :time => time, :extras => extras_hash, :layer => layer}.to_json
       end
       
       private
@@ -181,7 +182,7 @@ module Fiveruns
             <ul class="tuneup-step-info">
               <li class="tuneup-title">
                 <span class="time"><%= '%.2f' % (time * 1000) %> ms</span>
-                <a class='tuneup-step-name' title="<%=h name %>"><%=h name %></a>
+                <a class='tuneup-step-name' title="<%=h name.to_s %>"><%=h name.to_s %></a>
                 <% if !extras.empty? %>
                   <a class='tuneup-step-extras-link'>(?)</a>
                 <% end %>
@@ -227,19 +228,19 @@ module Fiveruns
         end
         
         def to_json
-          {:name => name, :content => content, :extended => extended}.to_json
+          {:content => content, :extended => extended}.to_json
         end
         
         private
         
         def template
           %(
-            <dt><%= h name %></dt>
+            <dt><%= h name.to_s %></dt>
             <dd>
               <%= content %>
               <% if extended.any? %>
                 <% extended.each do |name, value| %>
-                  <div class='tuneup-step-extra-extended' title='<%= h name %>'><%= value %></div>
+                  <div class='tuneup-step-extra-extended' title='<%= h name.to_s %>'><%= value %></div>
                 <% end %>
               <% end %>
             </dd>            

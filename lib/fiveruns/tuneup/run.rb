@@ -84,8 +84,15 @@ module Fiveruns
       def initialize(url, data, environment = self.class.environment, collected_at = Time.now)
         @url = url
         @data = data
-        @environment = environment,
+        @environment = environment
         @collected_at = collected_at
+        validate!
+      end
+      
+      def validate!
+        unless environment.is_a?(Hash)
+          raise ArgumentError, "Invalid environment information (must be a Hash): #{environment.inspect}"
+        end
       end
       
       def save
