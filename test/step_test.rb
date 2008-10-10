@@ -1,9 +1,4 @@
-require 'test/unit'
-
-require 'rubygems'
-require 'shoulda'
-
-require File.dirname(__FILE__) << "/../lib/fiveruns_tuneup_core"
+require File.dirname(__FILE__) << "/test_helper"
 
 class StepTest < Test::Unit::TestCase
   
@@ -37,10 +32,5 @@ class StepTest < Test::Unit::TestCase
       assert_kind_of Fiveruns::Tuneup::Step::Extra, extra
     end
   end
-  
-  def read_json(name)
-    File.read(File.dirname(__FILE__) << "/fixtures/#{name}.json")
-  end
-    
   
 end
