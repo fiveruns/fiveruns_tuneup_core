@@ -2,7 +2,7 @@ require 'rubygems'
 require 'echoe'
 
 Echoe.new 'fiveruns_tuneup_core' do |p|
-  p.version = '0.0.1'
+  p.version = '0.5.0'
   p.author = "FiveRuns Development Team"
   p.email  = 'dev@fiveruns.com'
   p.project = 'fiveruns'

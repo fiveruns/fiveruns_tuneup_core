@@ -6,11 +6,11 @@ module Fiveruns
       attr_accessor :stylesheets_path
     end
   
-    def self.insert_panel(body, run)
+    def self.insert_panel(body, run, allow_share = false)
       return body unless run
       tag = body[/(<body[^>]*>)/i, 1]
       return body unless tag
-      panel = Panel.new(run)
+      panel = Panel.new(run, allow_share)
       body.sub(/<\/head>/i, head << '</head>').sub(tag, tag + panel.to_html)
     end
 
@@ -24,9 +24,15 @@ module Fiveruns
     class Panel
       include Templating
       
-      attr_reader :root
-      def initialize(root)
-        @root = root
+      attr_reader :run, :root
+      def initialize(run, allow_share = false)
+        @run = run
+        @root = run.data
+        @allow_share = allow_share
+      end
+      
+      def allow_share?
+        @allow_share
       end
       
       private
@@ -37,8 +43,9 @@ module Fiveruns
             <div id="tuneup-data">
             <div id="tuneup-top">
               <%= root.to_html %>
-              <%# In later version... %>
-              <!-- <a href="#" id="tuneup-save-link">Share this Run</a> -->
+              <% if allow_share? %>
+                <a href="/fiveruns_tuneup_merb/share/<%= run.slug %>" id="tuneup-save-link">Share this Run</a>
+              <% end %>
             </div>
             <ul id="tuneup-details">
               <% root.children.each do |child| %>
