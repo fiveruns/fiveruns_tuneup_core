@@ -39,6 +39,7 @@ module Fiveruns
       
       def template
         %(
+          <!-- FIVERUNS_TUNEUP:START -->
           <div id="tuneup"><h1>FiveRuns TuneUp</h1><div style="display: block;" id="tuneup-content"><div id="tuneup-panel">
             <div id="tuneup-data">
             <div id="tuneup-top">
@@ -55,6 +56,7 @@ module Fiveruns
             </ul>
           </div>
           </div></div></div>
+          <!-- FIVERUNS_TUNEUP:END -->
         )
       end
       

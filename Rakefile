@@ -7,7 +7,7 @@ AUTHOR = "FiveRuns Development Team"
 EMAIL = "dev@fiveruns.com"
 HOMEPAGE = "http://tuneup.fiveruns.com/"
 SUMMARY = "Core utilities for FiveRuns TuneUp panels"
-GEM_VERSION = "0.5.1"
+GEM_VERSION = "0.5.2"
 
 spec = Gem::Specification.new do |s|
   s.rubyforge_project = 'fiveruns'
