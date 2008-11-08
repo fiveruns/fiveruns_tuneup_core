@@ -37,7 +37,7 @@ end
 
 task :default => :test
 
-sudo = RUBY_PLATFORM[/win/] ? '' : 'sudo'
+sudo = RUBY_PLATFORM[/win/] ? '' : 'sudo '
 
 desc "Install as a gem"
 task :install => [:package] do
