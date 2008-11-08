@@ -7,7 +7,7 @@ AUTHOR = "FiveRuns Development Team"
 EMAIL = "dev@fiveruns.com"
 HOMEPAGE = "http://tuneup.fiveruns.com/"
 SUMMARY = "Core utilities for FiveRuns TuneUp panels"
-GEM_VERSION = "0.5.2"
+GEM_VERSION = "0.5.3"
 
 spec = Gem::Specification.new do |s|
   s.rubyforge_project = 'fiveruns'
@@ -22,8 +22,6 @@ spec = Gem::Specification.new do |s|
   s.email = EMAIL
   s.homepage = HOMEPAGE
   s.add_dependency('json_pure')
-  s.add_development_dependency('Shoulda', '>= 2.0.0')
-  s.add_development_dependency('FakeWeb')
   s.require_path = 'lib'
   s.files = %w(README.rdoc Rakefile CHANGELOG) + FileList["{lib,test}/**/*"]
 end
